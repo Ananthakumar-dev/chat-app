@@ -3,10 +3,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="min-h-svh w-full bg-[#fcf5eb]">
-      {/* header */}
-      <Header />
-
+    <div className="min-h-[calc(100svh-80px)] w-full bg-[#fcf5eb]">
       {/* hero */}
       <div className="relative w-full h-[500px] md:h-[600px] overflow-hidden">
         <div className="absolute inset-0">

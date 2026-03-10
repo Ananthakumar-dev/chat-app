@@ -52,7 +52,7 @@ const components: { title: string; href: string; description: string }[] = [
 
 const Header = () => {
   return (
-    <div className="px-10 py-4 flex items-center justify-between">
+    <header className="px-10 py-4 flex items-center justify-between h-[80px]">
       {/* Logo */}
       <div>
 		<Image src={`/images/whatsapp.svg`} height={120} width={120} alt="Site logo" />
@@ -107,7 +107,7 @@ const Header = () => {
 			Login
 		</Button>
 	  </Link>
-    </div>
+    </header>
   );
 };
 
