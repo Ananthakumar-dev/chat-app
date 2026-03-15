@@ -11,10 +11,15 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import loginFormSchema, { LoginFormSchemaType } from "@/zod_schema/login";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { login } from "@/store/slices/authSlice";
 
 const LoginForm = () => {
+    const router = useRouter();
   const {
     control,
     handleSubmit,
@@ -29,8 +34,23 @@ const LoginForm = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<LoginFormSchemaType> = (data) => {
-    console.log(data);
+    const dispatch = useAppDispatch();
+    const { loading, error } = useAppSelector((state) => state.auth);
+
+  const onSubmit: SubmitHandler<LoginFormSchemaType> = async (data) => {
+    const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`;
+
+    const result = await dispatch(login({
+        email: data.email,
+        password: data.password
+    }))
+
+    if(login.fulfilled.match(result)) {
+        router.push('/chat');
+        toast.success("Logged in successfully! You can now chat with your assistant.");
+    } else {
+        toast.error("Login failed. Please check your credentials and try again.");
+    }
   };
 
   return (
@@ -42,7 +62,7 @@ const LoginForm = () => {
           render={({ field, fieldState }) => (
             <Field>
               <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-              <Input id={field.name} type="email" placeholder="m@example.com" />
+              <Input {...field} id={field.name} type="email" placeholder="m@example.com" />
 
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
@@ -50,7 +70,7 @@ const LoginForm = () => {
         />
 
         <Controller
-          name="email"
+          name="password"
           control={control}
           render={({ field, fieldState }) => (
             <Field>
@@ -63,7 +83,7 @@ const LoginForm = () => {
                   Forgot your password?
                 </a>
               </div>
-              <Input id={field.name} type="password" required />
+              <Input {...field} id={field.name} type="password" required />
 
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>

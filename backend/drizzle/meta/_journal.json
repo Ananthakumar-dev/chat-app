@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1773281203579,
+      "tag": "0000_confused_winter_soldier",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1773281254445,
+      "tag": "0001_whole_toxin",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1773281297993,
+      "tag": "0002_needy_thor_girl",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1773281484997,
+      "tag": "0003_busy_stellaris",
+      "breakpoints": true
+    }
+  ]
+}

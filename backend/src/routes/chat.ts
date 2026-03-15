@@ -1,6 +1,6 @@
 import express from "express";
-import { protectedRoute } from "../middleware/auth";
-import { send, update, destroy } from "../controller/chat.controller";
+import { protectedRoute } from "../middleware/auth.js";
+import { send, update, destroy } from "../controller/chat.controller.js";
 
 const router = express.Router();
 router.use(protectedRoute);

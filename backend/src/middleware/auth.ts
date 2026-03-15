@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { JwtConfig } from "../lib/jwt";
-import db from "../lib/db";
-import { users } from "../db/user.schema";
+import { JwtConfig } from "../lib/jwt.js";
+import db from "../lib/db.js";
+import { users } from "../db/user.schema.js";
 import { eq } from "drizzle-orm";
 
 declare global {
@@ -18,7 +18,7 @@ declare global {
 }
 
 export const protectedRoute = async (req: Request, res: Response, next: NextFunction) => {
-    const token: string = req.cookies('token')
+    const token: string = req.cookies?.token;
 
     if(!token) {
         return res.status(401).json({

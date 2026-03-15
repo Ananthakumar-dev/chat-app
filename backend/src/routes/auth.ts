@@ -1,9 +1,9 @@
 import express from "express";
-import { signup, login, logout } from "../controller/auth.controller";
-import { validate } from "../middleware/validate";
-import signupValidation from "../validations/auth/signup.validator";
-import loginValidation from "../validations/auth/login.validator";
-import { protectedRoute } from "../middleware/auth";
+import { signup, login, logout } from "../controller/auth.controller.js";
+import { validate } from "../middleware/validate.js";
+import signupValidation from "../validations/auth/signup.validator.js";
+import loginValidation from "../validations/auth/login.validator.js";
+import { protectedRoute } from "../middleware/auth.js";
 
 const router = express.Router();
 

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import db from "../lib/db";
-import { users } from "../db/user.schema";
+import db from "../lib/db.js";
+import { users } from "../db/user.schema.js";
 import { eq, not, or, and } from "drizzle-orm";
-import { messages } from "../db/message.schema";
+import { messages } from "../db/message.schema.js";
 
 export const getAllContacts = async (req: Request, res: Response) => {
     const user_id = req.user?.id;
@@ -14,7 +14,13 @@ export const getAllContacts = async (req: Request, res: Response) => {
         })
     }
 
-    const contacts = await db.select({id: users.id, name: users}).from(users).where(not(eq(users.id, user_id as number)));
+    const contacts = await db
+        .select({
+            id: users.id,
+            name: users.name
+        })
+        .from(users)
+        .where(not(eq(users.id, user_id as number)));
 
     res.status(200).json({
         success: true,
@@ -50,10 +56,19 @@ export const getChatPartners = async (req: Request, res: Response) => {
         }
     });
 
+    const ids = Array.from(chatPartnersIds);
+
+    if (ids.length === 0) {
+        return res.json({
+            success: true,
+            data: { chatPartners: [] }
+        });
+    }
+
     const chatPartners = await db.select({id: users.id, name: users.name}).from(users).where(
         and(
             not(eq(users.id, user_id as number)),
-            or(...Array.from(chatPartnersIds).map(id => eq(users.id, id)))
+            or(...ids.map(id => eq(users.id, id)))
         )
     );
 
@@ -66,7 +81,7 @@ export const getChatPartners = async (req: Request, res: Response) => {
     })
 }
 
-export const getMessageById = async (req: Request, res: Response) => {
+export const getMessageByUserId = async (req: Request, res: Response) => {
     const user_id = req.user?.id;
 
     if(!user_id) {
@@ -76,13 +91,18 @@ export const getMessageById = async (req: Request, res: Response) => {
         })
     }
 
-    const chat_user_id: number = Number(req.params.id);
+    const chat_user_id: number = Number(req.params.userId);
 
-    const all_messages = await db.select().from(messages).where(
-        or(
-            and(eq(messages.to, chat_user_id), eq(messages.from, user_id as number)), 
+    const all_messages = await db
+        .select()
+        .from(messages)
+        .where(
+            or(
+            and(eq(messages.to, chat_user_id), eq(messages.from, user_id as number)),
             and(eq(messages.to, user_id as number), eq(messages.from, chat_user_id))
-        ));
+            )
+        )
+        .orderBy(messages.created_at);
 
     res.status(200).json({
         success: true,
