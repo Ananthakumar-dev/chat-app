@@ -3,7 +3,7 @@ import * as z from "zod";
 const signupFormSchema = z.object({
   name: z
     .string()
-    .min(5, "Name must be at least 5 characters.")
+    .min(2, "Name must be at least 2 characters.")
     .max(50, "Name must be at most 50 characters."),
   email: z
     .email()

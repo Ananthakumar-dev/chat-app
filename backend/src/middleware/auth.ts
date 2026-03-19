@@ -9,9 +9,7 @@ declare global {
         interface Request {
             user?: {
                 id: number;
-                name: string;
                 email: string;
-                password: string;
             };
         }
     }
@@ -28,7 +26,7 @@ export const protectedRoute = async (req: Request, res: Response, next: NextFunc
     }
 
     const verify = JwtConfig.verifyToken(token);
-    const [user] = await db.select().from(users).where(eq(users.id, verify.id)).limit(1);
+    const [user] = await db.select({id: users.id, email: users.email}).from(users).where(eq(users.id, verify.id)).limit(1);
 
     if(!user) {
         return res.status(404).json({

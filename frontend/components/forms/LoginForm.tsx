@@ -93,7 +93,7 @@ const LoginForm = () => {
           <Button type="submit">Login</Button>
           <FieldDescription className="text-center">
             Don&apos;t have an account?
-            <Link href="/singup" className="pl-1">
+            <Link href="/signup" className="pl-1">
               Sign up
             </Link>
           </FieldDescription>

@@ -29,6 +29,13 @@
       "when": 1773281484997,
       "tag": "0003_busy_stellaris",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1773798403131,
+      "tag": "0004_silky_juggernaut",
+      "breakpoints": true
     }
   ]
 }

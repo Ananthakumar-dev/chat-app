@@ -13,7 +13,7 @@ const app = express();
 const corsOptions = {
     origin: process.env.CORS_ORIGIN || "http://localhost:3000",
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }
 
@@ -21,6 +21,9 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// serve static files
+app.use(express.static('public'));
 
 // routes
 // auth routes

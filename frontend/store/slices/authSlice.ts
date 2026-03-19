@@ -1,9 +1,11 @@
+import { UpdateProfileFormSchemaType } from "@/zod_schema/update_profile";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
 export interface User {
-    id: number;
+  id: number;
   name: string;
   email: string;
+  avatar?: string;
 }
 
 interface AuthState {
@@ -86,7 +88,7 @@ export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${API_URL}/auth/logout`, {
+      const response = await fetch(`${API_URL}/api/auth/logout`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -128,6 +130,38 @@ export const loadUser = createAsyncThunk(
   },
 );
 
+// update profile thunk
+export const updateProfile = createAsyncThunk(
+  "auth/updateProfile",
+  async (data: UpdateProfileFormSchemaType, { rejectWithValue }) => {
+    try {
+      const formdata = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        if (value instanceof FileList) {
+          Array.from(value).forEach((file) => {
+            formdata.append(key, file);
+          });
+        } else if (value !== undefined && value !== null) {
+          formdata.append(key, String(value));
+        }
+      });
+
+      const response = await fetch(`${API_URL}/api/auth/update-profile`, {
+        method: "PATCH",
+        credentials: "include",
+        body: formdata,
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        return rejectWithValue(result.message || "Failed to update profile");
+      }
+      return result.data;
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Failed to update profile");
+    }
+  },
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState: initalState,
@@ -150,6 +184,7 @@ const authSlice = createSlice({
     builder.addCase(
       signup.fulfilled,
       (state, action: PayloadAction<{ user: User; token: string }>) => {
+        console.log(state, action);
         state.loading = false;
         state.user = action.payload.user;
         state.token = action.payload.token;
@@ -180,7 +215,7 @@ const authSlice = createSlice({
         state.error = null;
       },
     );
-    
+
     builder.addCase(login.rejected, (state, action: PayloadAction<any>) => {
       state.loading = false;
       state.error = action.payload;

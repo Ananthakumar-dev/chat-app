@@ -51,34 +51,50 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup className="px-0">
-            <Tabs defaultValue="chat_partners" className="w-[400px]">
-              <TabsList>
+            <Tabs defaultValue="chat_partners">
+              <TabsList className="w-full">
                 <TabsTrigger value="chat_partners">Chat Partners</TabsTrigger>
                 <TabsTrigger value="contacts">Contacts</TabsTrigger>
               </TabsList>
               <TabsContent value="chat_partners">
                 <SidebarGroupContent>
                   {chatPartners.map((user) => (
-                    <button
+                    <a
+                      href="#"
                       key={user.id}
                       onClick={() => openChat(user)}
-                      className="hover:bg-sidebar-accent flex w-full flex-col items-start gap-2 border-b p-4 text-sm"
+                      className="flex flex-col items-start gap-2 border-b p-4 text-sm leading-tight whitespace-nowrap hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                     >
-                      {user.name}
-                    </button>
+                      <div className="flex items-center justify-between w-full">
+                        <span className="font-medium">{user.name}</span>
+                        <span className="text-xs">10.30AM</span>
+                      </div>
+
+                      <p className="text-xs text-muted-foreground">
+                        message
+                      </p>
+                    </a>
                   ))}
                 </SidebarGroupContent>
               </TabsContent>
               <TabsContent value="contacts">
                 <SidebarGroupContent>
                   {contacts.map((user) => (
-                    <button
+                    <a
+                      href="#"
                       key={user.id}
                       onClick={() => openChat(user)}
-                      className="hover:bg-sidebar-accent flex w-full flex-col items-start gap-2 border-b p-4 text-sm"
+                      className="flex flex-col items-start gap-2 border-b p-4 text-sm leading-tight whitespace-nowrap hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                     >
-                      {user.name}
-                    </button>
+                      <div className="flex items-center justify-between w-full">
+                        <span className="font-medium">{user.name}</span>
+                        <span className="text-xs">10.30AM</span>
+                      </div>
+
+                      <p className="text-xs text-muted-foreground">
+                        message
+                      </p>
+                    </a>
                   ))}
                 </SidebarGroupContent>
               </TabsContent>

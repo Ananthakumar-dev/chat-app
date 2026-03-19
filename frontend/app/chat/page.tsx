@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getContacts, getChatPartners } from "@/store/slices/chatSlice";
 
 import { AppSidebar } from "@/components/chat/app-sidebar";
@@ -20,9 +20,10 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import ChatWindow from "@/components/chat/chat-window";
+import { NavUser } from "@/components/chat/nav-user";
 
 export default function Page() {
-    const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getContacts());
@@ -39,25 +40,27 @@ export default function Page() {
     >
       <AppSidebar />
       <SidebarInset>
-        <header className="bg-background sticky top-0 flex shrink-0 items-center gap-2 border-b p-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator
-            orientation="vertical"
-            className="mr-2 data-[orientation=vertical]:h-4"
-          />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="#">All Inboxes</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Inbox</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+        <header className="bg-background sticky top-0 flex shrink-0 items-center justify-between border-b p-4">
+          <div className="flex items-center">
+            <SidebarTrigger className="-ml-1" />
+            <Separator
+              orientation="vertical"
+              className="mr-2 data-[orientation=vertical]:h-4"
+            />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Inbox</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+
+          <div className="flex-end">
+            <NavUser />
+          </div>
         </header>
-        
+
         <ChatWindow />
       </SidebarInset>
     </SidebarProvider>
