@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { sendMessage, addMessage } from "@/store/slices/chatSlice";
+import { sendMessage } from "@/store/slices/chatSlice";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 
 export default function ChatWindow() {
   const dispatch = useAppDispatch();
 
-  const { activeUser, messages } = useAppSelector((state) => state.chat);
+  const { activeUser, messages, onlineUserIds, socketConnected } = useAppSelector(
+    (state) => state.chat,
+  );
   const currentUser = useAppSelector((state) => state.auth.user);
 
   const [text, setText] = useState("");
@@ -22,6 +24,8 @@ export default function ChatWindow() {
     );
   }
 
+  const isActiveUserOnline = onlineUserIds.includes(activeUser.id);
+
   const handleSend = async () => {
     if (!text.trim() || !activeUser) return;
 
@@ -32,28 +36,16 @@ export default function ChatWindow() {
       }),
     );
 
-    // append message to redux
-    dispatch(
-      addMessage({
-        id: result.payload.id, // backend generated id
-        from: result.payload.from, // backend response
-        to: activeUser.id,
-        message: text,
-        created_at: result.payload.created_at, // backend response
-        updated_at: result.payload.updated_at, // backend response
-      }),
-    );
-
-    setText("");
+    if (sendMessage.fulfilled.match(result)) {
+      setText("");
+    }
   };
 
   return (
     <div className="flex flex-1 flex-col">
-      {/* header */}
-      <div className="flex items-center pl-4 border-b">
-        {/* profile image */}
+      <div className="flex items-center border-b pl-4">
         <div className="relative">
-          <div className="bg-muted border-2 border-dashed rounded-full w-8 h-8 flex items-center justify-center">
+          <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full border-2 border-dashed">
             <span className="text-lg font-semibold">
               {activeUser.name.charAt(0).toUpperCase()}
             </span>
@@ -62,12 +54,14 @@ export default function ChatWindow() {
 
         <div className="p-4 font-semibold">
           {activeUser.name}
-          <p className="text-xs text-muted-foreground">email</p>
+          <p className="text-xs text-muted-foreground">
+            {isActiveUserOnline ? "Online" : "Offline"}
+            {!socketConnected ? " | reconnecting..." : ""}
+          </p>
         </div>
       </div>
 
-      {/* messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+      <div className="flex-1 overflow-y-auto space-y-3 p-4">
         {messages.map((msg) => {
           const isMe = msg.from === currentUser?.id;
 
@@ -77,7 +71,7 @@ export default function ChatWindow() {
               className={`flex ${isMe ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`py-1 px-4 rounded-lg max-w-xs ${
+                className={`max-w-xs rounded-lg px-4 py-1 ${
                   isMe ? "bg-blue-500 text-white" : "bg-muted text-black"
                 }`}
               >
@@ -88,14 +82,13 @@ export default function ChatWindow() {
         })}
       </div>
 
-      {/* input */}
       <div className="border-t p-4 flex gap-2">
         <Input
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Type a message..."
-            className="flex-1"
-          />
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Type a message..."
+          className="flex-1"
+        />
 
         <Button
           onClick={handleSend}

@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import ChatWindow from "@/components/chat/chat-window";
 import { NavUser } from "@/components/chat/nav-user";
+import ChatSocket from "@/components/chat/chat-socket";
 
 export default function Page() {
   const dispatch = useAppDispatch();
@@ -38,6 +39,7 @@ export default function Page() {
         } as React.CSSProperties
       }
     >
+      <ChatSocket />
       <AppSidebar />
       <SidebarInset>
         <header className="bg-background sticky top-0 flex shrink-0 items-center justify-between border-b p-4">

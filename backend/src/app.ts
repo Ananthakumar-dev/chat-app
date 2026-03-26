@@ -2,14 +2,17 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { createServer } from "node:http";
 
 import authRoutes from "./routes/auth.js";
 import messageRoutes from "./routes/message.js";
 import chatRoutes from "./routes/chat.js";
+import { initializeSocket } from "./socket/index.js";
 
 dotenv.config();
 
 const app = express();
+const httpServer = createServer(app);
 const corsOptions = {
     origin: process.env.CORS_ORIGIN || "http://localhost:3000",
     credentials: true,
@@ -32,6 +35,8 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/chat", chatRoutes);
 
 const PORT: number = Number(process.env.PORT) || 8000;
-app.listen(PORT, () => {
+initializeSocket(httpServer);
+
+httpServer.listen(PORT, () => {
   console.log(`server listening on PORT: ${PORT}`);
 });

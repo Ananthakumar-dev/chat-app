@@ -26,8 +26,8 @@ const UpdateProfileForm = ({ onClose }: { onClose: () => void }) => {
   const form = useForm({
     resolver: zodResolver(updateProfileFormSchema),
     defaultValues: {
-      name: user?.name || '',
-      email: user?.email || '',
+      name: user?.name || "",
+      email: user?.email || "",
       avatar: undefined,
     },
   });
@@ -85,37 +85,39 @@ const UpdateProfileForm = ({ onClose }: { onClose: () => void }) => {
         )}
       />
 
-        <div className="space-y-2">
-            <Controller
-                name="avatar"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>Avatar</FieldLabel>
-                    <Input
-                    type="file"
-                    id={field.name}
-                    aria-invalid={fieldState.invalid}
-                    onChange={(e) => field.onChange(e.target.files)}
-                    onBlur={field.onBlur}
-                    disabled={field.disabled}
-                    name={field.name}
-                    ref={field.ref}
-                    />
-                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-                )}
-            />
+      <div className="space-y-2">
+        <Controller
+          name="avatar"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>Avatar</FieldLabel>
+              <Input
+                type="file"
+                id={field.name}
+                aria-invalid={fieldState.invalid}
+                onChange={(e) => field.onChange(e.target.files)}
+                onBlur={field.onBlur}
+                disabled={field.disabled}
+                name={field.name}
+                ref={field.ref}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
 
-            {
-                user?.avatar && (
-                    <div className="flex flex-col items-start gap-2">
-                        <FieldLabel>Current Avatar</FieldLabel>
-                        <img src={user.avatar} alt="Current Avatar" className="h-20 w-20 rounded-lg object-cover" />
-                    </div>
-                )
-            }
-        </div>
+        {user?.avatar && (
+          <div className="flex flex-col items-start gap-2">
+            <FieldLabel>Current Avatar</FieldLabel>
+            <img
+              src={user.avatar}
+              alt="Current Avatar"
+              className="h-20 w-20 rounded-lg object-cover"
+            />
+          </div>
+        )}
+      </div>
 
       <div className="text-right">
         <Button type="submit">Submit</Button>

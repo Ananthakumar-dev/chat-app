@@ -12,3 +12,7 @@ export interface Message {
   created_at: string;
   updated_at: string;
 }
+
+export interface UserWithLastMessage extends User {
+  last_message: Message | null;
+}

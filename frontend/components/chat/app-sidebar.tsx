@@ -19,15 +19,62 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setActiveUser, getMessages } from "@/store/slices/chatSlice";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  // Note: I'm using state to show active item.
-  // IRL you should use the url/router.
   const dispatch = useAppDispatch();
 
-  const { contacts, chatPartners } = useAppSelector((state) => state.chat);
+  const { contacts, chatPartners, activeUser, onlineUserIds } = useAppSelector(
+    (state) => state.chat,
+  );
 
   const openChat = (user: any) => {
     dispatch(setActiveUser(user));
     dispatch(getMessages(user.id));
+  };
+
+  const renderUserRow = (user: any) => {
+    const isOnline = onlineUserIds.includes(user.id);
+    const isActive = activeUser?.id === user.id;
+
+    return (
+      <a
+        href="#"
+        key={user.id}
+        onClick={(event) => {
+          event.preventDefault();
+          openChat(user);
+        }}
+        className={`flex flex-col items-start gap-2 border-b p-4 text-sm leading-tight whitespace-nowrap hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+          isActive ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""
+        }`}
+      >
+        <div className="flex items-center justify-between w-full gap-3">
+          <div className="flex items-center gap-2">
+            <span
+              className={`h-2.5 w-2.5 rounded-full ${
+                isOnline ? "bg-green-500" : "bg-slate-300"
+              }`}
+            />
+            <span className="font-medium">{user.name}</span>
+          </div>
+          <span className="text-xs">
+            {user.last_message
+              ? new Date(user.last_message.created_at).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : ""}
+          </span>
+        </div>
+
+        <div className="flex w-full items-center justify-between gap-3">
+          <p className="text-xs text-muted-foreground">
+            {user.last_message ? user.last_message.message : "No messages yet"}
+          </p>
+          <span className="text-[11px] text-muted-foreground">
+            {isOnline ? "Online" : "Offline"}
+          </span>
+        </div>
+      </a>
+    );
   };
 
   return (
@@ -42,10 +89,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarHeader className="gap-3.5 border-b p-4">
           <div className="flex w-full items-center justify-between">
             <div className="text-foreground text-base font-medium">Inbox</div>
-            <Label className="flex items-center gap-2 text-sm">
-              <span>Unreads</span>
-              <Switch className="shadow-none" />
-            </Label>
           </div>
           <SidebarInput placeholder="Type to search..." />
         </SidebarHeader>
@@ -58,44 +101,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </TabsList>
               <TabsContent value="chat_partners">
                 <SidebarGroupContent>
-                  {chatPartners.map((user) => (
-                    <a
-                      href="#"
-                      key={user.id}
-                      onClick={() => openChat(user)}
-                      className="flex flex-col items-start gap-2 border-b p-4 text-sm leading-tight whitespace-nowrap hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <span className="font-medium">{user.name}</span>
-                        <span className="text-xs">10.30AM</span>
-                      </div>
-
-                      <p className="text-xs text-muted-foreground">
-                        message
-                      </p>
-                    </a>
-                  ))}
+                  {chatPartners.map((user) => renderUserRow(user))}
                 </SidebarGroupContent>
               </TabsContent>
               <TabsContent value="contacts">
                 <SidebarGroupContent>
-                  {contacts.map((user) => (
-                    <a
-                      href="#"
-                      key={user.id}
-                      onClick={() => openChat(user)}
-                      className="flex flex-col items-start gap-2 border-b p-4 text-sm leading-tight whitespace-nowrap hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <span className="font-medium">{user.name}</span>
-                        <span className="text-xs">10.30AM</span>
-                      </div>
-
-                      <p className="text-xs text-muted-foreground">
-                        message
-                      </p>
-                    </a>
-                  ))}
+                  {contacts.map((user) => renderUserRow(user))}
                 </SidebarGroupContent>
               </TabsContent>
             </Tabs>

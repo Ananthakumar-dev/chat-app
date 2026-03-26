@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { messages } from "../db/message.schema.js";
 import path from "node:path";
 import fs from "node:fs/promises";
+import { emitNewMessage } from "../socket/index.js";
 
 interface SendMessageRequest {
   message: string;
@@ -17,7 +18,7 @@ export const send = async (req: Request, res: Response) => {
   const user_id = req.user?.id;
 
   if (!user_id) {
-    res.status(401).json({
+    return res.status(401).json({
       success: false,
       message: "User not found",
     });
@@ -56,18 +57,22 @@ export const send = async (req: Request, res: Response) => {
     .$returningId();
 
   const messageId = inserted[0]?.id;
+  const messagePayload = {
+    id: messageId,
+    from: user_id,
+    to: Number(to),
+    message,
+    file: file ? filename : null,
+    created_at: now,
+    updated_at: now,
+  };
+
+  emitNewMessage(messagePayload);
 
   res.status(200).json({
     success: true,
     message: "Message sent successfully",
-    data: {
-      id: messageId,
-      from: user_id,
-      to: Number(req.params.id),
-      message,
-      created_at: now,
-      updated_at: now,
-    },
+    data: messagePayload,
   });
 };
 

@@ -1,113 +1,34 @@
-"use client";
-
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "../ui/button";
-
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
-  },
-  {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
-    description:
-      "For sighted users to preview content available behind a link.",
-  },
-  {
-    title: "Progress",
-    href: "/docs/primitives/progress",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-  },
-  {
-    title: "Scroll-area",
-    href: "/docs/primitives/scroll-area",
-    description: "Visually or semantically separates content.",
-  },
-  {
-    title: "Tabs",
-    href: "/docs/primitives/tabs",
-    description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-  },
-  {
-    title: "Tooltip",
-    href: "/docs/primitives/tooltip",
-    description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-  },
-];
-
 const Header = () => {
   return (
-    <header className="px-10 py-4 flex items-center justify-between h-[80px]">
-      {/* Logo */}
-      <div>
-		<Image src={`/images/whatsapp.svg`} height={120} width={120} alt="Site logo" />
-	  </div>
+    <header className="flex items-center justify-between">
+        <Link href="/" className="inline-flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#0a7cff,#8b5cf6)] shadow-[0_18px_35px_rgba(10,124,255,0.24)]">
+            <span className="text-2xl font-black text-white">M</span>
+            </div>
+            <div>
+            <p className="bg-[linear-gradient(135deg,#0a7cff,#8b5cf6)] bg-clip-text text-3xl font-black tracking-[-0.05em] text-transparent">
+                Messenger
+            </p>
+            </div>
+        </Link>
 
-      {/* Nav items */}
-      <NavigationMenu>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>Features</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="w-96">
-                <Link href="/docs" title="Introduction">
-                  Re-usable components built with Tailwind CSS.
-                </Link>
-                <Link href="/docs/installation" title="Installation">
-                  How to install dependencies and structure your app.
-                </Link>
-                <Link href="/docs/primitives/typography" title="Typography">
-                  Styles for headings, paragraphs, lists...etc
-                </Link>
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-          <NavigationMenuItem className="hidden md:flex">
-            <NavigationMenuTrigger>Components</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-2 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                {components.map((component) => (
-                  <Link
-                    key={component.title}
-                    title={component.title}
-                    href={component.href}
-                  >
-                    {component.description}
-                  </Link>
-                ))}
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink asChild>
-              <Link href="/docs">Docs</Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
-
-      {/* Login button */}
-	  <Link href="/login">
-		<Button type="button" variant="default">
-			Login
-		</Button>
-	  </Link>
-    </header>
+        <div className="hidden items-center gap-3 md:flex">
+            <Link
+            href="/login"
+            className="rounded-full border border-slate-200 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+            >
+            Log in
+            </Link>
+            <Link
+            href="/signup"
+            className="rounded-full bg-[linear-gradient(135deg,#0a7cff,#8b5cf6)] px-5 py-2 text-sm font-semibold text-white shadow-[0_16px_30px_rgba(10,124,255,0.24)] transition hover:scale-[1.02]"
+            >
+            Get started
+            </Link>
+        </div>
+        </header>
   );
 };
 
